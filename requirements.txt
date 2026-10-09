@@ -1,0 +1,8 @@
+sherpa-onnx
+sounddevice
+numpy
+pyyaml
+pillow
+PySide6-Essentials
+evdev-binary
+python-xlib

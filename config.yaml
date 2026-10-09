@@ -1,0 +1,45 @@
+hotkey:
+  # Hold both to record, release either to stop. Pressing any other key while
+  # holding the chord cancels the recording (so Ctrl+Alt+T etc. still work).
+  # Ctrl+Alt+Q quits nVoice.
+  hold: ["ctrl", "alt"]    # any of: ctrl, alt, shift, super
+  min_duration_ms: 300     # recordings shorter than this are discarded
+
+audio:
+  samplerate: 16000
+  channels: 1
+  preroll_ms: 500          # audio kept from *before* the keypress so the first word isn't clipped
+  always_on: true          # keep the mic stream open (needed for preroll; KDE will show the mic-in-use icon)
+  silence_db: -50          # recordings whose average loudness is below this are ignored (avoids Whisper hallucinations)
+
+stt:
+  # Swap "small" for "tiny" below for ~3x faster but less accurate transcription.
+  encoder: "models/small/small.en-encoder.int8.onnx"
+  decoder: "models/small/small.en-decoder.int8.onnx"
+  tokens: "models/small/small.en-tokens.txt"
+  num_threads: 4
+  provider: "cpu"
+
+paste:
+  # Key combo sent after copying the text. Terminals (Konsole etc.) need "ctrl+shift+v".
+  combo: "ctrl+v"
+  restore_clipboard: true
+  restore_delay_ms: 300    # wait before restoring your old clipboard, so the target app has read the new text
+
+llm:
+  # Optional cleanup through a local Ollama server. Skipped automatically if
+  # Ollama isn't running, or explicitly with: nvoice --no-llm
+  enabled: true
+  base_url: "http://localhost:11434"
+  model: "qwen3:4b-instruct"
+  temperature: 0.1
+  skip_under_words: 10     # short utterances are pasted raw, for speed
+  system_prompt: >
+    You clean up raw speech transcripts. Only remove filler words (um, uh, ah),
+    fix punctuation and capitalization, and correct small grammar slips.
+    Never rewrite, summarize, translate, answer, or add content that wasn't spoken.
+    Return ONLY the cleaned text, nothing else.
+
+ui:
+  glass_opacity: 0.55      # pill tint: 0 = clear glass, 1 = solid dark (like the Windows version)
+  blur: true               # frosted-glass blur behind the pill (KDE Plasma; other desktops just get the tint)

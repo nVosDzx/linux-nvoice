@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Launcher: runs nVoice from its venv, from any directory.
+DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+exec "$DIR/.venv/bin/python" "$DIR/nvoice.py" "$@"
